@@ -258,3 +258,49 @@ func MethEulerKoshi(f funcUsed2, a, b, step, x0, y0 float64) {
 	fmt.Println("X координаты: ", x)
 	fmt.Println("Y координаты: ", y)
 }
+
+func MethMinDih(f funcUsed, a, b, eps float64) float64 {
+	var delta float64 = eps / 2
+	var half float64 = (a + b) / 2
+	
+	for true {
+		if f(half-delta) < f(half+delta) {
+			b = half + delta
+		} else {
+			a = half - delta
+		}
+		if (b-a)/2 < eps {
+			break
+		}
+	}
+	return (a + b) / 2
+}
+
+func MethMinGold(f funcUsed, a, b, eps float64) float64 {
+	var magic_l float64 = (3 - math.Sqrt(5)) / 2
+	var magic_r float64 = (math.Sqrt(5) - 1) / 2
+	var x1 float64 = a + (b-a)*magic_l
+	var x2 float64 = a + (b-a)*magic_r
+	var f1 float64 = f(x1)
+	var f2 float64 = f(x2)
+
+	for true {
+		if (b-a)/2 < eps {
+			break
+		}
+		if f1 <= f2 {
+			b = x2
+			x2 = x1
+			x1 = a + b - x2
+			f2 = f1
+			f1 = f(x1)
+		} else {
+			a = x1
+			x1 = x2
+			x2 = a + b - x1
+			f1 = f2
+			f2 = f(x2)
+		}
+	}
+	return (a + b) / 2
+}
